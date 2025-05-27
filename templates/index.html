@@ -6,7 +6,21 @@
     <title>Perpustakita - Dashboard</title>
 </head>
 <body>
-    <h1>Welcome to Perpustakita - Admin Panel</h1>
-    <p>ini adalah halaman awal</p>
+    <h1>Tambah Buku Baru</h1>
+    <form action="/add-book" method="POST">
+        <label>Judul: </label><br>
+        <input type="text" name="title" required><br><br>
+
+        <label>Penulis: </label><br>
+        <input type="text" name="author" required><br><br>
+
+        <label>Jumlah: </label><br><br>
+        <input type="number" name="quantity" required><br><br>
+
+        <button type="submit">Tambah Buku</button>
+    </form>
+    <hr>
+
+    <h2>📚 Fitur selanjutnya: Daftar Buku Akan Tampil di Sini</h2>
 </body>
 </html>
