@@ -21,6 +21,34 @@
     </form>
     <hr>
 
-    <h2>📚 Fitur selanjutnya: Daftar Buku Akan Tampil di Sini</h2>
+    <h2>Daftar Buku</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Penulis</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody id="book-body">
+            <script>
+                fetch('/books')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("book-body")
+                    data.forEach(book => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.quantity}</td>
+                           `
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(err => console.error("Error fetching books: ", err))
+            </script>
+        </tbody>
+    </table>
 </body>
 </html>

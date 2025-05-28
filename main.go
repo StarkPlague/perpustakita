@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -76,10 +77,44 @@ func insertDummyBook() {
 	}
 }
 
+type Book struct {
+	//ID       int    `json:"id"`
+	Title    string `json:"title"`
+	Author   string `json:"author"`
+	Quantity int    `json:"quantity"`
+}
+
+func getBookHandler(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query(context.Background(), "SELECT title, author, quantity FROM books")
+	if err != nil {
+		http.Error(w, "Failed to fetch book", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var books []Book
+
+	for rows.Next() {
+		var b Book
+		err := rows.Scan(&b.Title, &b.Author, &b.Quantity)
+		if err != nil {
+			http.Error(w, "Error scanning row", http.StatusInternalServerError)
+		}
+		books = append(books, b)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(books)
+	if err != nil {
+		http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
+	}
+}
+
 func main() {
 	connectDB()
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/add-book", addBookHandler)
+	http.HandleFunc("/books", getBookHandler)
 	//	insertDummyBook()
 	fmt.Println("Server Running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
