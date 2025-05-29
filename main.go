@@ -78,14 +78,14 @@ func insertDummyBook() {
 }
 
 type Book struct {
-	//ID       int    `json:"id"`
+	ID       int    `json:"id"`
 	Title    string `json:"title"`
 	Author   string `json:"author"`
 	Quantity int    `json:"quantity"`
 }
 
 func getBookHandler(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query(context.Background(), "SELECT title, author, quantity FROM books")
+	rows, err := db.Query(context.Background(), "SELECT id, title, author, quantity FROM books")
 	if err != nil {
 		http.Error(w, "Failed to fetch book", http.StatusInternalServerError)
 		return
@@ -96,7 +96,7 @@ func getBookHandler(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var b Book
-		err := rows.Scan(&b.Title, &b.Author, &b.Quantity)
+		err := rows.Scan(&b.ID, &b.Title, &b.Author, &b.Quantity)
 		if err != nil {
 			http.Error(w, "Error scanning row", http.StatusInternalServerError)
 		}
@@ -110,10 +110,26 @@ func getBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func deleteBookHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+	}
+
+	id := r.FormValue("id")
+	_, err := db.Exec(context.Background(), "DELETE FROM books WHERE id=$1", id)
+	if err != nil {
+		http.Error(w, "Failed to delete book", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func main() {
 	connectDB()
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/add-book", addBookHandler)
+	http.HandleFunc("/delete-book", deleteBookHandler)
 	http.HandleFunc("/books", getBookHandler)
 	//	insertDummyBook()
 	fmt.Println("Server Running on http://localhost:8080")

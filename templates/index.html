@@ -32,6 +32,23 @@
         </thead>
         <tbody id="book-body">
             <script>
+                function deleteBook(id) {
+                    fetch('/delete-book', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type' : 'application/x-www-form-urlencoded',
+                        },
+                        body: 'id=' + encodeURIComponent(id)
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            location.reload();
+                        } else {
+                            alert("Gagal menghapus buku")
+                        }
+                    })
+                }
+
                 fetch('/books')
                 .then(response => response.json())
                 .then(data => {
@@ -42,6 +59,7 @@
                             <td>${book.title}</td>
                             <td>${book.author}</td>
                             <td>${book.quantity}</td>
+                            <td><button onclick="deleteBook(${book.id})">Hapus</button></td>
                            `
                         tableBody.appendChild(row);
                     });
