@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perpustakita - Dashboard</title>
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <section id="table-book-html">
@@ -18,41 +18,7 @@
             </tr>
         </thead>
         <tbody id="book-body">
-            <script>
-                function deleteBook(id) {
-                    fetch('/delete-book', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type' : 'application/x-www-form-urlencoded',
-                        },
-                        body: 'id=' + encodeURIComponent(id)
-                    })
-                    .then(res => {
-                        if (res.ok) {
-                            location.reload();
-                        } else {
-                            alert("Gagal menghapus buku")
-                        }
-                    })
-                }
-
-                fetch('/books')
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById("book-body")
-                    data.forEach(book => {
-                        const row = document.createElement("tr");
-                        row.innerHTML = `
-                            <td>${book.title}</td>
-                            <td>${book.author}</td>
-                            <td>${book.quantity}</td>
-                            <td><button onclick="deleteBook(${book.id})">Hapus</button></td>
-                           `
-                        tableBody.appendChild(row);
-                    });
-                })
-                .catch(err => console.error("Error fetching books: ", err))
-            </script>
+            
         </tbody>
     </table>
     </section>
@@ -73,5 +39,9 @@
     </form>
     <hr>
     </section>
+
+    <script src="/static/js/books.js"></script>
+    <script src="/static/js/bookActions.js"></script>
+    
 </body>
 </html>

@@ -127,7 +127,8 @@ func deleteBookHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	connectDB()
-	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/", indexHandler)                                                         //index.html
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static")))) //handle static
 	http.HandleFunc("/add-book", addBookHandler)
 	http.HandleFunc("/delete-book", deleteBookHandler)
 	http.HandleFunc("/books", getBookHandler)
