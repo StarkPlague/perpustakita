@@ -15,23 +15,23 @@ function deleteBook(id) {
                     })
                 }
 
-function editBook(id,title,author,quantity) {
-    const newTitle = prompt("Edit Judul: ", title)
-    const newAuthor = prompt("Edit Penulis: ", author)
-    const newQuantity = prompt("Edit jumlah: ", quantity)
+function editBook(id, title, author, quantity) {
+    const newTitle = prompt("Edit Judul:", title);
+    const newAuthor = prompt("Edit Penulis:", author);
+    const newQuantity = prompt("Edit Jumlah:", quantity);
 
     if (newTitle && newAuthor && newQuantity) {
         fetch('/update-book', {
             method: 'POST',
             headers: {
-                'Content-Type':'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: `id=${id}&title=${encodeURIComponent(newTitle)}&author=${encodeURIComponent(newAuthor)}&quantity=${newQuantity}`
-        }).then(res =>{
+        }).then(res => {
             if (res.ok) {
-                location.reload()
+                location.reload();
             } else {
-                alert("Gagal update buku")
+                alert("Gagal update buku");
             }
         })
     }

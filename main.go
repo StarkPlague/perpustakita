@@ -125,6 +125,36 @@ func deleteBookHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func editBookHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	id := r.FormValue("id")
+	title := r.FormValue("title")
+	author := r.FormValue("author")
+	quantityStr := r.FormValue("quantity")
+
+	var quantity int
+	_, err := fmt.Sscan(quantityStr, &quantity)
+	if err != nil {
+		http.Error(w, "Invalid quantity", http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(context.Background(),
+		"UPDATE books SET title=$1, author=$2, quantity=$3 WHERE id=$4",
+		title, author, quantity, id,
+	)
+
+	if err != nil {
+		http.Error(w, "Failed to Update book", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 func main() {
 	connectDB()
 	http.HandleFunc("/", indexHandler)                                                         //index.html
@@ -132,6 +162,7 @@ func main() {
 	http.HandleFunc("/add-book", addBookHandler)
 	http.HandleFunc("/delete-book", deleteBookHandler)
 	http.HandleFunc("/books", getBookHandler)
+	http.HandleFunc("/update-book", editBookHandler)
 	//	insertDummyBook()
 	fmt.Println("Server Running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
