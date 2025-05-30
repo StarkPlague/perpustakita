@@ -4,23 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perpustakita - Dashboard</title>
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <h1>Tambah Buku Baru</h1>
-    <form action="/add-book" method="POST">
-        <label>Judul: </label><br>
-        <input type="text" name="title" required><br><br>
-
-        <label>Penulis: </label><br>
-        <input type="text" name="author" required><br><br>
-
-        <label>Jumlah: </label><br><br>
-        <input type="number" name="quantity" required><br><br>
-
-        <button type="submit">Tambah Buku</button>
-    </form>
-    <hr>
-
+    <section id="table-book-html">
     <h2>Daftar Buku</h2>
     <table>
         <thead>
@@ -68,5 +55,23 @@
             </script>
         </tbody>
     </table>
+    </section>
+
+    <section id="add-book-html">
+        <h2>Tambah Buku Baru</h2>
+        <form action="/add-book" method="POST">
+        <label>Judul: </label><br>
+        <input type="text" name="title" required><br><br>
+
+        <label>Penulis: </label><br>
+        <input type="text" name="author" required><br><br>
+
+        <label>Jumlah: </label><br><br>
+        <input type="number" name="quantity" required><br><br>
+
+        <button type="submit">Tambah Buku</button>
+    </form>
+    <hr>
+    </section>
 </body>
 </html>
