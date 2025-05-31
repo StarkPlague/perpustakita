@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <select id="sortSelect">
+        <option value="">-- Urutkan --</option>
+        <option value="title-asc">Judul (A-Z)</option>
+        <option value="title-desc">Judul (Z-A)</option>
+        <option value="quantity-asc">Jumlah (Sedikit ke Banyak)</option>
+        <option value="quantity-desc">Jumlah (Banyak ke Sedikit)</option>
+    </select>
     <section id="table-book-html">
     <h2>Daftar Buku</h2>
     <table>
