@@ -6,7 +6,7 @@ import (
 	"perpustakita/internal/models"
 )
 
-func getBorrowers(w http.ResponseWriter, r *http.Request) {
+func GetBorrowers(w http.ResponseWriter, r *http.Request) {
 	borrowers, err := models.GetAllBorrowers()
 	if err != nil {
 		http.Error(w, "Failed to get borrowers", http.StatusInternalServerError)
@@ -14,7 +14,7 @@ func getBorrowers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(borrowers)
 }
 
-func addBorrower(w http.ResponseWriter, r *http.Request) {
+func AddBorrower(w http.ResponseWriter, r *http.Request) {
 	var b models.Borrower
 	err := json.NewDecoder(r.Body).Decode(&b)
 
