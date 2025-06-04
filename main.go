@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -10,39 +9,13 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5"
+	"perpustakita/internal/db"
+	"perpustakita/internal/handlers"
 )
 
-var db *pgx.Conn
-
-func addBookHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	title := r.FormValue("title")
-	author := r.FormValue("author")
-	quantityStr := r.FormValue("quantity")
-
-	var quantity int
-	_, err := fmt.Sscan(quantityStr, &quantity)
-	if err != nil {
-		http.Error(w, "Invalid quantity", http.StatusBadRequest)
-		return
-	}
-
-	_, err = db.Exec(context.Background(),
-		"INSERT INTO books (title, author, quantity) VALUES ($1, $2, $3)",
-		title, author, quantity,
-	)
-	if err != nil {
-		fmt.Println("Insert error: ", err)
-		http.Error(w, "Failed inserting books", http.StatusInternalServerError)
-		return
-	}
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-
+func init() { //fungsi init otomatis dibaca go sebagai fungsi yang mulai duluan sebelum main
+	dsn := "postgres://postgres:1212@localhost:5432/perpustakita"
+	db.InitDB(dsn)
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -55,108 +28,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-func connectDB() {
-	var err error
-	db, err = pgx.Connect(context.Background(), "postgres://postgres:1212@localhost:5432/perpustakita")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-	}
-	fmt.Println("Connected to DB!")
-}
-
-func insertDummyBook() {
-	_, err := db.Exec(context.Background(),
-		"INSERT INTO books (title, author, quantity) VALUES  ($1, $2, $3)",
-		"Atomic Habits", "James Clear", 5,
-	)
-	if err != nil {
-		fmt.Println("insert error: ", err)
-	} else {
-		fmt.Println("New dummy books inserted")
-	}
-}
-
-type Book struct {
-	ID       int    `json:"id"`
-	Title    string `json:"title"`
-	Author   string `json:"author"`
-	Quantity int    `json:"quantity"`
-}
-
-func getBookHandler(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query(context.Background(), "SELECT id, title, author, quantity FROM books")
-	if err != nil {
-		http.Error(w, "Failed to fetch book", http.StatusInternalServerError)
-		return
-	}
-	defer rows.Close()
-
-	var books []Book
-
-	for rows.Next() {
-		var b Book
-		err := rows.Scan(&b.ID, &b.Title, &b.Author, &b.Quantity)
-		if err != nil {
-			http.Error(w, "Error scanning row", http.StatusInternalServerError)
-		}
-		books = append(books, b)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(books)
-	if err != nil {
-		http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
-	}
-}
-
-func deleteBookHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
-
-	id := r.FormValue("id")
-	_, err := db.Exec(context.Background(), "DELETE FROM books WHERE id=$1", id)
-	if err != nil {
-		http.Error(w, "Failed to delete book", http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-}
-
-func editBookHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-		return
-	}
-
-	id := r.FormValue("id")
-	title := r.FormValue("title")
-	author := r.FormValue("author")
-	quantityStr := r.FormValue("quantity")
-
-	var quantity int
-	_, err := fmt.Sscan(quantityStr, &quantity)
-	if err != nil {
-		http.Error(w, "Invalid quantity", http.StatusBadRequest)
-		return
-	}
-
-	_, err = db.Exec(context.Background(),
-		"UPDATE books SET title=$1, author=$2, quantity=$3 WHERE id=$4",
-		title, author, quantity, id,
-	)
-
-	if err != nil {
-		http.Error(w, "Failed to Update book", http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-}
-
 func main() {
-	connectDB()
 	http.HandleFunc("/", indexHandler)                                                         //index.html
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static")))) //handle static
 	http.HandleFunc("/add-book", addBookHandler)
