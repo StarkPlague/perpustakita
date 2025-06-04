@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"internal/perpustakita/models"
+	"perpustakita/internal/models"
 )
 
 func getBorrowers(w http.ResponseWriter, r *http.Request) {

@@ -10,7 +10,7 @@ import (
 	"perpustakita/internal/models"
 )
 
-func addBookHandler(w http.ResponseWriter, r *http.Request) {
+func AddBookHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -41,7 +41,7 @@ func addBookHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getBookHandler(w http.ResponseWriter, r *http.Request) {
+func GetBookHandler(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.DB.Query(context.Background(), "SELECT id, title, author, quantity FROM books")
 	if err != nil {
 		http.Error(w, "Failed to fetch book", http.StatusInternalServerError)
@@ -67,7 +67,7 @@ func getBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func deleteBookHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteBookHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
 	}
@@ -82,7 +82,7 @@ func deleteBookHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func editBookHandler(w http.ResponseWriter, r *http.Request) {
+func EditBookHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
 		return
@@ -112,7 +112,7 @@ func editBookHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func insertDummyBook() {
+func InsertDummyBook() {
 	_, err := db.DB.Exec(context.Background(),
 		"INSERT INTO books (title, author, quantity) VALUES  ($1, $2, $3)",
 		"Atomic Habits", "James Clear", 5,

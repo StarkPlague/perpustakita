@@ -5,10 +5,6 @@ import (
 	"html/template"
 	"net/http"
 
-	"context"
-	"os"
-
-	"github.com/jackc/pgx/v5"
 	"perpustakita/internal/db"
 	"perpustakita/internal/handlers"
 )
@@ -31,10 +27,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", indexHandler)                                                         //index.html
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static")))) //handle static
-	http.HandleFunc("/add-book", addBookHandler)
-	http.HandleFunc("/delete-book", deleteBookHandler)
-	http.HandleFunc("/books", getBookHandler)
-	http.HandleFunc("/update-book", editBookHandler)
+	http.HandleFunc("/add-book", handlers.AddBookHandler)
+	http.HandleFunc("/delete-book", handlers.DeleteBookHandler)
+	http.HandleFunc("/books", handlers.GetBookHandler)
+	http.HandleFunc("/update-book", handlers.EditBookHandler)
 	//	insertDummyBook()
 	fmt.Println("Server Running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)

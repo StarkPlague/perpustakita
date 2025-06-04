@@ -35,7 +35,7 @@ func GetAllBorrowers() ([]Borrower, error) {
 }
 
 func InsertBorrower(b Borrower) error {
-	_, err := db.Exec(context.Background(), "INSERT INTO borrowers(name, nik, email, phone) VALUES($1, $2, $3, $4)",
+	_, err := db.DB.Exec(context.Background(), "INSERT INTO borrowers(name, nik, email, phone) VALUES($1, $2, $3, $4)",
 		b.Name, b.NIK, b.Email, b.Phone)
 	return err
 }
