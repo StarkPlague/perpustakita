@@ -112,14 +112,14 @@ func EditBookHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func InsertDummyBook() {
-	_, err := db.DB.Exec(context.Background(),
-		"INSERT INTO books (title, author, quantity) VALUES  ($1, $2, $3)",
-		"Atomic Habits", "James Clear", 5,
-	)
-	if err != nil {
-		fmt.Println("insert error: ", err)
-	} else {
-		fmt.Println("New dummy books inserted")
-	}
-}
+//func InsertDummyBook() {
+//	_, err := db.DB.Exec(context.Background(),
+//		"INSERT INTO books (title, author, quantity) VALUES  ($1, $2, $3)",
+//		"Atomic Habits", "James Clear", 5,
+//	)
+//	if err != nil {
+//		fmt.Println("insert error: ", err)
+//	} else {
+//		fmt.Println("New dummy books inserted")
+//	}
+//}
