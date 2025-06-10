@@ -29,7 +29,7 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = services.AddBook(title, author, quantity)
+	err = services.AddBook(title, author, quantity) // call Addbook from services
 
 	if err != nil {
 		fmt.Println("Insert error: ", err)

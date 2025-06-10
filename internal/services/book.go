@@ -15,7 +15,7 @@ func AddBook(title string, author string, quantity int) error {
 	if quantity <= 0 {
 		return errors.New("quantity cannot be lower than 0")
 	}
-
+	
 	book := models.Book{Title: title, Author: author, Quantity: quantity}
 	return models.CreateBook(book)
 }
