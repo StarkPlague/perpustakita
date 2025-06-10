@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"fmt"
 	"perpustakita/internal/db"
 	"perpustakita/internal/models"
+	"perpustakita/internal/services"
 )
 
 func AddBookHandler(w http.ResponseWriter, r *http.Request) {
@@ -21,16 +23,14 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request) {
 	quantityStr := r.FormValue("quantity")
 
 	var quantity int
-	_, err := fmt.Sscan(quantityStr, &quantity)
+	quantity, err := strconv.Atoi(quantityStr)
 	if err != nil {
 		http.Error(w, "Invalid quantity", http.StatusBadRequest)
 		return
 	}
 
-	_, err = db.DB.Exec(context.Background(),
-		"INSERT INTO books (title, author, quantity) VALUES ($1, $2, $3)",
-		title, author, quantity,
-	)
+	err = services.AddBook(title, author, quantity)
+
 	if err != nil {
 		fmt.Println("Insert error: ", err)
 		http.Error(w, "Failed inserting books", http.StatusInternalServerError)
