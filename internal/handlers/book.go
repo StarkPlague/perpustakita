@@ -8,7 +8,6 @@ import (
 
 	"fmt"
 	"perpustakita/internal/db"
-	"perpustakita/internal/models"
 	"perpustakita/internal/services"
 )
 
@@ -42,26 +41,9 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetBookHandler(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.DB.Query(context.Background(), "SELECT id, title, author, quantity FROM books")
-	if err != nil {
-		http.Error(w, "Failed to fetch book", http.StatusInternalServerError)
-		return
-	}
-	defer rows.Close()
-
-	var books []models.Book
-
-	for rows.Next() {
-		var b models.Book
-		err := rows.Scan(&b.ID, &b.Title, &b.Author, &b.Quantity)
-		if err != nil {
-			http.Error(w, "Error scanning row", http.StatusInternalServerError)
-		}
-		books = append(books, b)
-	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(books)
+	err = json.NewEncoder(w).Encode(books) //bug
 	if err != nil {
 		http.Error(w, "Failed to encode JSON", http.StatusInternalServerError)
 	}

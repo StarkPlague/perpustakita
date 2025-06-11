@@ -19,3 +19,7 @@ func AddBook(title string, author string, quantity int) error {
 	book := models.Book{Title: title, Author: author, Quantity: quantity}
 	return models.CreateBook(book)
 }
+
+func FetchAllBooks([]models.Book, error) {
+	
+}

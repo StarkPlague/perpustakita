@@ -24,3 +24,24 @@ func CreateBook(book Book) error {
 
 	return err
 }
+
+func GetAllBooks() ([]Book, error) {
+	rows, err := db.DB.Query(context.Background(), "SELECT id, title, author, quantity FROM books")
+	if err != nil {
+		log.Println("Failed to fetch book", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var books []Book
+
+	for rows.Next() {
+		var b Book
+		err := rows.Scan(&b.ID, &b.Title, &b.Author, &b.Quantity)
+		if err != nil {
+			log.Println("Error scanning row", err)
+		}
+		books = append(books, b)
+	}
+	return books, nil
+}
