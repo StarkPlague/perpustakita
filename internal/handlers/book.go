@@ -41,6 +41,11 @@ func AddBookHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetBookHandler(w http.ResponseWriter, r *http.Request) {
+	books, err := services.FetchAllBooks()
+	if err != nil {
+		http.Error(w, "failed to fetch book", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(books) //bug
