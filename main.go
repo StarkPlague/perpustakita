@@ -31,6 +31,8 @@ func main() {
 	http.HandleFunc("/delete-book", handlers.DeleteBookHandler)
 	http.HandleFunc("/books", handlers.GetBookHandler)
 	http.HandleFunc("/update-book", handlers.EditBookHandler)
+	http.HandleFunc("/borrowers", handlers.GetBorrowers)
+	http.HandleFunc("/borrowers", handlers.AddBorrower)
 	//	insertDummyBook()
 	fmt.Println("Server Running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
