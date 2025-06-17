@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"perpustakita/internal/db"
+	"time"
 )
 
 type Book struct {
@@ -12,9 +13,6 @@ type Book struct {
 	Author   string `json:"author"`
 	Quantity int    `json:"quantity"`
 }
-
-ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-defer cancel()
 
 func CreateBook(book Book) error {
 	_, err := db.DB.Exec(context.Background(),
