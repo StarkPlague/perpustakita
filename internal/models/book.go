@@ -13,6 +13,9 @@ type Book struct {
 	Quantity int    `json:"quantity"`
 }
 
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+defer cancel()
+
 func CreateBook(book Book) error {
 	_, err := db.DB.Exec(context.Background(),
 		"INSERT INTO books (title, author, quantity) VALUES ($1, $2, $3)",
@@ -25,7 +28,13 @@ func CreateBook(book Book) error {
 }
 
 func GetAllBooks() ([]Book, error) {
-	rows, err := db.DB.Query(context.Background(), "SELECT id, title, author, quantity FROM books")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) //- Kalau query lebih dari 5 detik,
+	// context akan membatalkan query secara otomatis,
+	// sehingga aplikasi tidak terblokir menunggu terlalu lama.
+
+	defer cancel()
+
+	rows, err := db.DB.Query(ctx, "SELECT id, title, author, quantity FROM books")
 	if err != nil {
 		log.Println("Failed to fetch book", err)
 		return nil, err
