@@ -10,6 +10,7 @@ func GetBorrowers(w http.ResponseWriter, r *http.Request) {
 	borrowers, err := models.GetAllBorrowers()
 	if err != nil {
 		http.Error(w, "Failed to get borrowers", http.StatusInternalServerError)
+		return
 	}
 	json.NewEncoder(w).Encode(borrowers)
 }
