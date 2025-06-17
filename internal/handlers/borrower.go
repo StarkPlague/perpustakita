@@ -24,9 +24,9 @@ func AddBorrower(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = models.InsertBorrower(b)
-
 	if err != nil {
 		http.Error(w, "Failed to insert", http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
