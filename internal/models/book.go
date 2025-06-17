@@ -21,7 +21,6 @@ func CreateBook(book Book) error {
 	if err != nil {
 		log.Println("Database error", err)
 	}
-
 	return err
 }
 
@@ -40,8 +39,11 @@ func GetAllBooks() ([]Book, error) {
 		err := rows.Scan(&b.ID, &b.Title, &b.Author, &b.Quantity)
 		if err != nil {
 			log.Println("Error scanning row", err)
+			return nil, err
 		}
 		books = append(books, b)
+		continue // Skip buku yang gagal di-scan
+
 	}
 	return books, nil
 }
