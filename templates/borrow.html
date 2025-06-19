@@ -1,0 +1,10 @@
+<form action="/borrow" method="POST">
+    <input name="name" placeholder="Nama Peminjam">
+    <input name="contact" placeholder="Kontak">
+    <select name="book_id">
+        {{range .Books}}
+            <option value="{{.ID}}">{{.Title}}</option>
+        {{end}}
+    </select>
+    <button type="submit">Pinjam</button>
+</form>
