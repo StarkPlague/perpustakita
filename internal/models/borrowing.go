@@ -10,7 +10,7 @@ type Borrowing struct {
 	ID              int
 	BorrowerName    string
 	BorrowerContact string
-	BookID          string
+	BookID          int
 	BorrowerDate    string
 	Status          string
 }
