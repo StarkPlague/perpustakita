@@ -35,3 +35,16 @@ func InsertBorrowing(ctx context.Context, conn *pgx.Conn, b Borrowing) error {
 	return err
 
 }
+
+func FindOrCreateBorrower(ctx context.Context, conn *pgx.Conn, name string, contact string) (int, error) {
+	var id int
+	err := conn.QueryRow(ctx, "SELECT id from borrowers WHERE name = $1 AND contact = $2", name, contact).Scan(&id)
+	if err == nil {
+		return id, nil 
+	}
+
+	err = conn.QueryRow(ctx,
+	"INSERT INTO borrowers(name, contact) VALUES ($1, $2) RETURNING id",
+	name, contact).Scan(&id)
+	return id, err
+}

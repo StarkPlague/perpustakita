@@ -38,6 +38,8 @@ func BorrowBookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Release()
 
+	
+
 	err = models.InsertBorrowing(context.Background(), conn.Conn(), borrowing)
 	if err != nil {
 		http.Error(w, "failed to borrow book", http.StatusInternalServerError)
